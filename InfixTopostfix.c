@@ -148,16 +148,22 @@ char* infixToPostFix(char infixArray[])
 					popedItem = pop();
 					postFixArrayFilledIndex++;
 					postFixArray[postFixArrayFilledIndex] = popedItem;
+					printf("\n -----------the postFixArray index is = %d and the element is = %c ---------------- \n", postFixArrayFilledIndex,postFixArray[postFixArrayFilledIndex]);
 				}
 				push(infixArray[i]);
 			}
 		}
-		if(isEmpty() == false)
-		{
-			popedItem = pop();
-			postFixArrayFilledIndex++;
-			postFixArray[postFixArrayFilledIndex] = popedItem;
-		}
+		
+		printf("\n -----------the postFixArray index is = %d and the element is = %c ---------------- \n", postFixArrayFilledIndex,postFixArray[postFixArrayFilledIndex]);
+		
+	}
+	if(isEmpty() == false)
+	{
+		popedItem = pop();
+		postFixArrayFilledIndex++;
+		postFixArray[postFixArrayFilledIndex] = popedItem;
+		printf("\n -----------the postFixArray index is = %d and the element is = %c ---------------- \n", postFixArrayFilledIndex,postFixArray[postFixArrayFilledIndex]);
+
 	}
 
 	return postFixArray;
