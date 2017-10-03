@@ -261,13 +261,37 @@ void printRevreseRecursively(struct Node* head)
 	if(head == NULL)
 		return;
 	printRevreseRecursively(head->next);
-	// printf("%d\n",head->data );
+	
 }
+
+void swapPairWiseINLL()
+{
+	struct Node* current = root;
+	struct Node* temp;
+	struct Node* prev = NULL;
+
+	while(current->next != NULL && current->next->next != NULL)
+	{
+		temp = current->next;
+		current->next = temp->next;
+		temp->next = current;
+		prev = current;
+		printf("prev data = %d",prev->data);
+		current = current->next;
+	}
+	if(current != NULL)
+	{
+		prev->next = current;
+	}
+}
+
+
  int main(int argc, char const *argv[])
 {
 	addInA(2);
 	addInA(4);
 	addInA(5);
+	addInA(6);
 	// addInA(10);
 	// addInA(9);
 
@@ -287,7 +311,8 @@ void printRevreseRecursively(struct Node* head)
 
 	// meargeTwoSortedLL();
 
-	printRevreseRecursively(root);
+	// printRevreseRecursively(root);
+	swapPairWiseINLL();
 	printGeneric(root);
 	// printLL();
 
