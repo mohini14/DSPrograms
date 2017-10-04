@@ -1,91 +1,115 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<stdbool.h>
+
+struct TreeNode
+{
+	int data;
+	struct TreeNode* lchild;
+	struct TreeNode* rchild;
+};
+
+struct Queue
+{
+	struct Node* rear;
+	struct Node* front;
+};
 
 struct Node
 {
-	int data;
-	struct Node* lchild;
-	struct Node* rchild;
+	struct Node* next;
+	struct TreeNode* data;
 };
 
-struct QueueNode
+
+struct TreeNode* root = NULL;
+struct Queue* queue = NULL;
+struct Node* node = NULL;
+void createQueue()
 {
-	int data;
-	int rear;
-	int front;
-	int* array;
-	int capacity;
-	int size;
+	queue = (struct Queue* )malloc(sizeof(struct Queue));
+	queue->front = NULL;
+	queue->rear = NULL;
+}
 
-};
+void printQueue()
+{
+	printf("---- printing queue\n");
+	struct Node* temp = queue->front;
+	
+	while(temp != NULL)
+	{
+		printf("data = %d\n", temp->data->data);
+		temp = temp->next;
+	}
+}
 
-struct Node* root = NULL;
-struct QueueNode* queueNode = NULL;
+void enqueue(struct TreeNode* data)
+{
+	struct Node* newNode = (struct Node* )malloc(sizeof(struct Node));
+	newNode->data = data;
+	newNode->next = NULL;
+	// first element
+	if(queue->front == NULL )
+	{
+		queue->front = newNode;
+		queue->rear = newNode;
+	}
+	else
+	{
+		queue->rear->next = newNode;
+		queue->rear = queue->rear->next;
+	}
 
-struct Node* insert(struct Node* root, int data)
+	
+}
+
+struct TreeNode* dequeue()
+{
+	struct TreeNode* item;
+	if(queue->front == NULL)
+	{
+		printf("No items to dequeue\n");
+		return NULL;
+	}
+	else
+	{
+		item = queue->front->data;
+		queue->front = queue->front->next;
+		if(queue->rear == NULL)
+			queue->front = NULL;
+	}
+	return item;
+}
+
+
+
+bool QueueIsEmpty()
+{
+	if(queue->front == NULL)
+		return true;
+	return false;
+}
+
+struct TreeNode* insert(struct TreeNode* root, int data)
 {
 	if(root == NULL)
 	{
-		root = (struct Node* )malloc(sizeof(struct Node));
+		root = (struct TreeNode* )malloc(sizeof(struct TreeNode));
 		root->lchild = NULL;
 		root->rchild = NULL;
 		root->data = data;
 		return root;
 	}
-	if(root->lchild == NULL)
+	if(root->data > data)
 		root->lchild = insert(root->lchild, data);
 	else
 		root->rchild = insert(root->rchild, data);
 
 	return root;
 }
-void createQueue(int capacity)
-{
-	queueNode = (struct QueueNode* )malloc(sizeof(struct QueueNode));
-	queueNode->rear = -1;
-	queueNode->front = -1;
-	queueNode->capacity = capacity;
-	queueNode->size = 0;
-	queueNode->array = (int* )malloc(capacity * sizeof(int));
-}
 
-void enqueue(int data)
-{
-	if(!(queueNode->rear == queueNode->capacity - 1))
-	{
-	// first insertion
-		if(queueNode->rear == -1 && queueNode->front == -1)
-			{
-				queueNode->rear++;
-				queueNode->front++;
-			}
-		else
-			queueNode->rear = (queueNode->rear + 1)%queueNode->capacity;
-
-		queueNode->array[queueNode->rear] = data;
-		queueNode->size++;
-	}
-	else
-		printf("Queue is full\n");
-}
-
-int deque()
-{
-	int item;
-	if(queueNode->front == -1 || queueNode->rear < queueNode->front)
-	{
-		printf("the queue is empty\n");
-		return -11;
-	}
-	else
-	{
-		item = queueNode->array[queueNode->front];
-		queueNode->size--;
-		queueNode->front = (queueNode->front + 1)%queueNode->capacity;
-	}
-	return item;
-}
-void printTree(struct Node* root)
+void printTree(struct TreeNode* root)
 {
 	if(root != NULL)
 	{
@@ -95,47 +119,63 @@ void printTree(struct Node* root)
 	}
 }
 
-void printQueue()
-{
-	if(queueNode->size == 0)
-		printf("No elements to print in Queue\n");
-	else
-	{
-		for(int i = queueNode->front; i <= queueNode->rear; i++)
-			printf("%d\n", queueNode->array[i]);
-	}
 
-}
 
 void breathOrderTraversal()
 {
+	struct TreeNode* tempNode; 
+	if(root != NULL)
+	{
+		createQueue();
+		enqueue(root);
+		enqueue(NULL);
+	}
+	while(!QueueIsEmpty())
+	{
+		
+		tempNode = dequeue();
+
+		if(tempNode == NULL)
+		{
+			printf("\n");
+
+			enqueue(NULL);
+		}
+		else
+		{
+		if(tempNode->lchild == NULL && tempNode->rchild == NULL)
+			break;
+		else
+		{
+		if(tempNode->lchild != NULL)
+			enqueue(tempNode->lchild);
+		if(tempNode->rchild != NULL)
+			enqueue(tempNode->rchild);
+
+
+		printf("the data is = %d\n", tempNode->data);
+	}}
+	}
 
 }
 
 int main(int argc, char const *argv[])
 {
 	root = insert(root, 1);
+	root = insert(root, 0);
 	root = insert(root, 2);
-	root = insert(root, 3);
 	root = insert(root, 4);
+	root = insert(root, 5);
+	root = insert(root, 6);
+
+
 
 	
 	
 	printTree(root);
-	printf("--------Queue thing------------\n");
-	createQueue(5);
-	enqueue(1);
-	enqueue(2);
-	enqueue(3);
-	enqueue(4);
-	enqueue(5);
-	
-	
-	printf("the deque element 1.%d\n 2.%d\n 3.%d\n ",deque(),deque(),deque() );
-	
-	printQueue();
 
-
+	printf("the level wise traversal is------------\n");
+	breathOrderTraversal();
 	
 	return 0;
 }
